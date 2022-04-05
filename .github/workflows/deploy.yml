@@ -1,0 +1,31 @@
+name: Publish Package
+
+on:
+  release:
+    types:
+    - released
+
+jobs:
+  tests:
+    # Reuse tests workflow
+    uses: ./.github/workflows/tests.yml
+
+  build:
+    # Needs tests job success
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install
+        run: npm ci
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+

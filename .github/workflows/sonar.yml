@@ -1,0 +1,19 @@
+name: Run Sonar scan
+
+on:
+  schedule:
+    # Runs everyday at 00:30
+    - cron: '30 0 * * *'
+
+
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: SonarCloud Scan
+      # Use SonarCloud GH Action available on Marketplace
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
